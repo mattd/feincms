@@ -209,9 +209,9 @@ class MediaFileBase(Base, TranslatedObjectMixin):
 
         self.type = self.determine_file_type(self.file.name)
         # Try to detect things that are not really images
-        if self.type == 'image':
+        if self.type == 'image' and not self.id:
             try:
-                Image.open(self.file.path)
+                Image.open(self.file)
             except:
                 self.type = self.determine_file_type('***') # It's binary something
 
@@ -292,7 +292,7 @@ def admin_thumbnail(obj):
     if obj.type == 'image':
         image = None
         try:
-            image = feincms_thumbnail.thumbnail(obj.file.name, '100x60')
+            image = feincms_thumbnail.thumbnail(obj.file.name, '300x180')
         except:
             pass
 
