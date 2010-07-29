@@ -232,17 +232,21 @@ class MediaFileBase(Base, TranslatedObjectMixin):
                 exif = False
                 
             if exif:
-                orientation = exif.get(274)
-                rotation = 0
-                if orientation == 3:
-                    rotation = 180
-                elif orientation == 6:
-                    rotation = 270
-                elif orientation == 8:
-                    rotation = 90
-                if rotation:
-                    image = image.rotate(rotation)
-                    image.save(self.file.path)
+                try:
+                    orientation = exif.get(274)
+                except KeyError:
+                    pass
+                else:
+                    rotation = 0
+                    if orientation == 3:
+                        rotation = 180
+                    elif orientation == 6:
+                        rotation = 270
+                    elif orientation == 8:
+                        rotation = 90
+                    if rotation:
+                        image = image.rotate(rotation)
+                        image.save(self.file.path)
 
         self.purge_translation_cache()
 
